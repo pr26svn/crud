@@ -18,4 +18,20 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::apiResource('posts', PostController::class);
+Route::controller(AuthController::class)->group(function () {
+    Route::post('login', 'login');
+    Route::post('register', 'register');
+    Route::post('logout', 'logout');
+    Route::post('refresh', 'refresh');
+
+});
+//Route::apiResource('posts', PostController::class);
+
+
+Route::get("/posts", [PostController::class, "index"]);
+Route::post("/posts", [PostController::class, "store"]);
+Route::put("/posts/{id}", [PostController::class, "update"])->middleware("jwt.auth");
+Route::delete("/posts/{id}", [PostController::class, "destroy"])->middleware("jwt.auth");
+
+
+
